@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep — Senior React Native @ LTIMindtree</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 24px;
+  }
+  .stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .stat {
+    background: #1e2330;
+    border: 1px solid #2d3448;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+  .stat span { color: #60a5fa; font-weight: 600; }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #2d3448;
+    background: #1e2330;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: #60a5fa; color: #60a5fa; }
+  .filter-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
+  .search-wrap {
+    margin-bottom: 20px;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #1e2330;
+    border: 1px solid #2d3448;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: #3b82f6; }
+  .search-wrap input::placeholder { color: #475569; }
+  .q-count {
+    font-size: 0.8rem;
+    color: #475569;
+    margin-bottom: 12px;
+  }
+  .card {
+    background: #1e2330;
+    border: 1px solid #2d3448;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: #3b4a6b; }
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    font-size: 0.75rem;
+    color: #475569;
+    min-width: 28px;
+    padding-top: 2px;
+  }
+  .q-text {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+  }
+  .tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .chevron {
+    color: #475569;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 3px;
+    transition: transform 0.2s;
+  }
+  .card.open .chevron { transform: rotate(180deg); }
+  .card-body {
+    display: none;
+    padding: 0 16px 16px 56px;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: #94a3b8;
+    border-top: 1px solid #2d3448;
+    padding-top: 14px;
+  }
+  .card.open .card-body { display: block; }
+  .card-body code {
+    display: inline-block;
+    background: #0f1117;
+    border: 1px solid #2d3448;
+    border-radius: 4px;
+    padding: 0 5px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.82rem;
+    color: #7dd3fc;
+  }
+  .card-body pre {
+    background: #0f1117;
+    border: 1px solid #2d3448;
+    border-radius: 8px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    margin: 10px 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #7dd3fc;
+    line-height: 1.6;
+  }
+  .card-body ul { padding-left: 18px; margin: 8px 0; }
+  .card-body li { margin-bottom: 4px; }
+  .card-body strong { color: #e2e8f0; }
+  .tip {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #0c2a1a;
+    border-left: 3px solid #22c55e;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82rem;
+    color: #86efac;
+  }
+  .warn {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #1a0c00;
+    border-left: 3px solid #f97316;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82rem;
+    color: #fdba74;
+  }
+  .tag-rn { background: #1e3a5f; color: #7dd3fc; }
+  .tag-sf { background: #1a2e1a; color: #86efac; }
+  .tag-redux { background: #2d1a3a; color: #c4b5fd; }
+  .tag-cv { background: #3a1a1a; color: #fca5a5; }
+  .tag-perf { background: #2d2a0e; color: #fde68a; }
+  .tag-git { background: #1a1a1a; color: #94a3b8; }
+  .tag-arch { background: #1a2d3a; color: #67e8f9; }
+  .tag-lead { background: #3a1a2d; color: #f9a8d4; }
+  .empty { text-align: center; padding: 40px; color: #475569; }
+</style>
+</head>
+<body>
+
+<h1>Senior React Native — Interview Prep</h1>
+<div class="subtitle">LTIMindtree · Warsaw · 50 вопросов с ответами</div>
+
+<div class="stats">
+  <div class="stat">Всего вопросов: <span>50</span></div>
+  <div class="stat">React Native: <span>12</span></div>
+  <div class="stat">Salesforce: <span>10</span></div>
+  <div class="stat">Redux: <span>6</span></div>
+  <div class="stat">CV/OpenCV: <span>5</span></div>
+  <div class="stat">Perf: <span>7</span></div>
+  <div class="stat">Git/CI: <span>5</span></div>
+  <div class="stat">Leadership: <span>5</span></div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-tag="all">Все</button>
+  <button class="filter-btn" data-tag="rn">React Native</button>
+  <button class="filter-btn" data-tag="sf">Salesforce</button>
+  <button class="filter-btn" data-tag="redux">Redux</button>
+  <button class="filter-btn" data-tag="cv">Computer Vision</button>
+  <button class="filter-btn" data-tag="perf">Performance</button>
+  <button class="filter-btn" data-tag="git">Git/CI</button>
+  <button class="filter-btn" data-tag="arch">Architecture</button>
+  <button class="filter-btn" data-tag="lead">Leadership</button>
+</div>
+
+<div class="search-wrap">
+  <input type="text" id="search" placeholder="Поиск по вопросу..." />
+</div>
+
+<div class="q-count" id="qcount"></div>
+<div id="list"></div>
+
+<script>
+const QUESTIONS = [
+  // ===== REACT NATIVE =====
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как работает архитектура React Native? Чем Old Architecture отличается от New Architecture (JSI, Fabric, TurboModules)?",
+    a: `<strong>Old Architecture</strong> использует JavaScript Bridge — асинхронную JSON-сериализацию для общения JS и нативного слоя. Это bottleneck: все данные сериализуются/десериализуются, вызовы батчатся.<br><br>
+<strong>New Architecture</strong> (стабильна с RN 0.73+):<br>
+<ul>
+  <li><strong>JSI (JavaScript Interface)</strong> — C++ слой, JS напрямую держит ссылки на нативные объекты, zero serialization overhead</li>
+  <li><strong>Fabric</strong> — новый рендер на C++, синхронные layout-вычисления, поддержка Concurrent Features React 18</li>
+  <li><strong>TurboModules</strong> — нативные модули загружаются лениво (lazy), типы генерируются из Codegen</li>
+  <li><strong>Codegen</strong> — статическая типизация интерфейсов между JS и native через Flow/TS схемы</li>
+</ul>
+<div class="tip">💡 На практике: если у тебя была работа с C++ или нативными модулями — упомяни. Если нет — честно скажи, что работал с JS-стороной, знаешь концепцию JSI.</div>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Что такое Native Modules и как ты их писал? Когда нужен native module vs просто JS?",
+    a: `Native Module — bridge между JavaScript и нативным (ObjC/Swift, Java/Kotlin) кодом.<br><br>
+<strong>Когда нужен:</strong>
+<ul>
+  <li>Доступ к platform API (Bluetooth, NFC, Camera hardware)</li>
+  <li>Тяжёлые вычисления (image processing, crypto)</li>
+  <li>Существующие нативные библиотеки (OpenCV, Salesforce SDK)</li>
+</ul>
+<pre>// Android: Java
+@ReactMethod
+public void processImage(String path, Promise promise) {
+  // OpenCV или другая логика
+  promise.resolve(result);
+}
+
+// JS side
+NativeModules.ImageProcessor.processImage(path)
+  .then(result => ...)</pre>
+<strong>С New Architecture</strong> — через TurboModules + Codegen, типобезопасно.<br><br>
+<div class="tip">💡 Упомяни, что в dbsapp работал с нативным слоем Android (MainActivity.kt, savedInstanceState) — это прямое доказательство.</div>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как работает React Native Hermes engine? Зачем его включать?",
+    a: `<strong>Hermes</strong> — JavaScript engine от Meta, оптимизированный для React Native.<br><br>
+<strong>Преимущества vs JavaScriptCore:</strong>
+<ul>
+  <li>Precompiled bytecode — JS компилируется в байткод при билде, не в рантайме → меньше TTI (Time to Interactive)</li>
+  <li>Меньше потребление памяти</li>
+  <li>Быстрее cold start (особенно заметно на Android)</li>
+  <li>Garbage collector оптимизирован под мобильные ограничения</li>
+</ul>
+С RN 0.70+ Hermes включён по умолчанию. Дебаггинг через Chrome DevTools / Flipper с поддержкой Hermes.`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как организовать Offline-First архитектуру в React Native без Salesforce SmartStore?",
+    a: `Варианты хранилищ:<br>
+<ul>
+  <li><strong>WatermelonDB</strong> — реактивная, синхронизация с backend, lazy loading больших датасетов</li>
+  <li><strong>SQLite (react-native-sqlite-storage / op-sqlite)</strong> — прямой SQL, полный контроль</li>
+  <li><strong>MMKV</strong> — быстрый key-value (замена AsyncStorage, в 30x быстрее)</li>
+  <li><strong>AsyncStorage</strong> — только для простых данных, не для offline-first</li>
+</ul>
+<strong>Паттерн Offline-First:</strong>
+<ul>
+  <li>Локальное хранилище — source of truth</li>
+  <li>Optimistic updates — UI обновляется сразу, sync в фоне</li>
+  <li>Conflict resolution strategy (last-write-wins, server-wins, merge)</li>
+  <li>Background sync (NetInfo + queue)</li>
+</ul>
+<pre>NetInfo.addEventListener(state => {
+  if (state.isConnected) {
+    syncQueue.flush(); // отправить накопленные операции
+  }
+});</pre>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Объясни разницу между useCallback, useMemo и React.memo. Когда каждый из них реально нужен?",
+    a: `<ul>
+  <li><strong>React.memo</strong> — HOC, мемоизирует компонент целиком. Перерисовка только если props изменились (shallow compare).</li>
+  <li><strong>useMemo</strong> — мемоизирует результат вычисления. Для тяжёлых derivations.</li>
+  <li><strong>useCallback</strong> — мемоизирует функцию. Нужен когда передаёшь коллбэк в memo-компонент или в deps другого хука.</li>
+</ul>
+<strong>Реальные кейсы когда НЕ нужны:</strong> если компонент и так рендерится быстро — преждевременная оптимизация. useMemo сам стоит памяти.<br><br>
+<strong>Когда нужны (React Native специфика):</strong> FlatList renderItem обязательно в useCallback, иначе каждый рендер пересоздаёт функцию и дочерние айтемы перерисовываются.
+<pre>const renderItem = useCallback(({ item }) => (
+  &lt;ItemCard item={item} onPress={handlePress} /&gt;
+), [handlePress]);</pre>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как правильно работать с FlatList для больших датасетов (10k+ записей)?",
+    a: `<strong>Ключевые пропсы:</strong>
+<ul>
+  <li><code>windowSize</code> — количество экранов выше/ниже видимой области (default 21, снижай до 5–7)</li>
+  <li><code>maxToRenderPerBatch</code> — сколько элементов за один batch (default 10)</li>
+  <li><code>initialNumToRender</code> — только видимые при маунте</li>
+  <li><code>getItemLayout</code> — если высота fixed, убирает измерения полностью</li>
+  <li><code>removeClippedSubviews</code> — удаляет off-screen views из native дерева (Android особенно)</li>
+  <li><code>keyExtractor</code> — стабильные уникальные ключи</li>
+</ul>
+<strong>Дополнительно:</strong> Virtualization (FlashList от Shopify в 10x быстрее нативного FlatList), lazy image loading, memo на item компонентах.<br><br>
+<div class="tip">💡 FlashList — в продакшне уже стандарт де-факто для перформанс-критичных списков.</div>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Что такое Reanimated 2/3 и зачем он нужен вместо Animated API?",
+    a: `<strong>Стандартный Animated API</strong> — работает через bridge, анимации могут дропать кадры при нагрузке JS треда.<br><br>
+<strong>Reanimated 2/3</strong> — анимации выполняются на UI thread напрямую (через Worklets — маленькие JS функции, компилируемые в native).<br>
+<ul>
+  <li>60/120fps гарантировано даже при heavy JS работе</li>
+  <li><code>useSharedValue</code>, <code>useAnimatedStyle</code>, <code>withSpring</code>, <code>withTiming</code></li>
+  <li>Gesture Handler интеграция (pan, pinch, swipe)</li>
+</ul>
+<pre>const offset = useSharedValue(0);
+const animatedStyles = useAnimatedStyle(() => ({
+  transform: [{ translateX: offset.value }],
+}));
+// Worklet — выполняется на UI thread</pre>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как организовать навигацию в большом React Native приложении?",
+    a: `<strong>React Navigation v6/v7</strong> — стандарт де-факто.<br><br>
+<strong>Структура для enterprise app:</strong>
+<ul>
+  <li>RootNavigator — auth check → AuthStack или AppStack</li>
+  <li>AppStack — BottomTabNavigator (основные разделы)</li>
+  <li>Каждый Tab — своя Stack (deep linking, back stack)</li>
+  <li>Shared screens — через Modal стек поверх</li>
+</ul>
+<strong>Deep Linking</strong> — обязательно настраивать linking config для universal links (iOS) и intent filters (Android).<br><br>
+<strong>Performance</strong>: <code>lazy: true</code> на tab screens, <code>detachInactiveScreens</code> через react-native-screens.`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как ты настраивал Push Notifications в React Native (Firebase / APNs)?",
+    a: `<strong>Стек:</strong> Firebase Cloud Messaging (FCM) для обеих платформ.<br><br>
+<strong>Android:</strong>
+<ul>
+  <li>google-services.json в android/app</li>
+  <li>FCM token → backend</li>
+  <li>Foreground: через listener; Background/Killed: FirebaseMessagingService</li>
+  <li>Notification channels (Android 8+)</li>
+</ul>
+<strong>iOS:</strong>
+<ul>
+  <li>APNs certificate или p8 key в Firebase console</li>
+  <li>requestPermission() — explicit user consent обязателен</li>
+  <li>Background modes: Remote notifications</li>
+</ul>
+<div class="tip">💡 Ты работал с Firebase/push notification consent flows в dbsapp — конкретно это и расскажи.</div>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как в React Native организовать работу с WebView? Какие есть ограничения и способы общения с ней?",
+    a: `<strong>react-native-webview</strong> — стандартная библиотека.<br><br>
+<strong>Коммуникация RN ↔ WebView:</strong>
+<ul>
+  <li><code>injectedJavaScript</code> — код вставляется при загрузке</li>
+  <li><code>postMessage</code> из WebView → <code>onMessage</code> в RN</li>
+  <li><code>injectJavaScript()</code> — вызов в рантайме</li>
+</ul>
+<strong>Производительность:</strong> WebView — отдельный process, memory cost. Для Leaflet/карт (как в твоём случае с dbsapp) — оптимизация через <code>javaScriptEnabled</code>, кеширование тайлов, <code>scrollEnabled</code>, hardwareAcceleration.<br><br>
+<div class="tip">💡 Прямо расскажи про Leaflet/WebView оптимизацию в DBS Bremen app — это конкретный боевой опыт.</div>`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Как ты управляешь версиями и релизами React Native приложения (iOS/Android)?",
+    a: `<strong>Versioning:</strong> SemVer — <code>version</code> в package.json, <code>versionCode/versionName</code> (Android), <code>CFBundleVersion/CFBundleShortVersionString</code> (iOS). Синхронизировать автоматически через Fastlane или скрипты.<br><br>
+<strong>Release channels:</strong> dev → staging → production. Feature flags для частичного rollout.<br><br>
+<strong>OTA updates:</strong> CodePush / EAS Update для JS bundle без полного релиза (не меняет нативный код).<br><br>
+<strong>Fastlane:</strong> автоматизация подписи, билда, деплоя в TestFlight/Play Console.`
+  },
+  {
+    tag: "rn", tagLabel: "React Native",
+    q: "Что такое Metro bundler? Как настраивать metro.config.js?",
+    a: `<strong>Metro</strong> — JS bundler для React Native (разработан Meta). Аналог webpack, оптимизирован под mobile.<br><br>
+<strong>Часто настраивают:</strong>
+<ul>
+  <li>Resolve aliases (monorepo paths)</li>
+  <li>Asset extensions (добавить .svg, .lottie)</li>
+  <li>Transformer (SVG → компонент через SVGR)</li>
+  <li>Watchman exclusions для производительности</li>
+</ul>
+<pre>const config = {
+  resolver: {
+    assetExts: assetExts.filter(ext => ext !== 'svg'),
+    sourceExts: [...sourceExts, 'svg'],
+  },
+  transformer: {
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
+};</pre>
+<strong>В Turborepo/monorepo</strong> — нужно настраивать watchFolders чтобы Metro видел пакеты из workspace.`
+  },
+
+  // ===== SALESFORCE =====
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Что такое Salesforce Mobile SDK? Из каких основных компонентов он состоит?",
+    a: `<strong>Salesforce Mobile SDK</strong> — набор инструментов для разработки мобильных приложений, интегрированных с Salesforce.<br><br>
+<strong>Ключевые компоненты:</strong>
+<ul>
+  <li><strong>SmartStore</strong> — зашифрованная локальная SQLite база (secure offline storage)</li>
+  <li><strong>SmartSync / MobileSyncSDK</strong> — синхронизация данных между SmartStore и Salesforce Cloud (Sync Down, Sync Up)</li>
+  <li><strong>SalesforceSDKCore</strong> — аутентификация (OAuth 2.0), session management</li>
+  <li><strong>RestClient</strong> — обёртка над Salesforce REST API</li>
+</ul>
+<strong>Для React Native:</strong> react-native-force (salesforce-mobilesdk-reactnative) — bridge к нативным SDK компонентам.`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как работает Salesforce SmartStore? Что такое Soup?",
+    a: `<strong>SmartStore</strong> — зашифрованная база данных на устройстве (SQLite под капотом, шифрование через SQLCipher).<br><br>
+<strong>Soup</strong> — аналог таблицы/коллекции в SmartStore. Каждый Soup хранит JSON-объекты.<br><br>
+<strong>Основные операции:</strong>
+<ul>
+  <li><code>registerSoup</code> — создать soup с индексами</li>
+  <li><code>upsertSoupEntries</code> — вставить/обновить записи</li>
+  <li><code>querySoup</code> — запрос (smart query через SQL-подобный синтаксис)</li>
+  <li><code>removeFromSoup</code> — удалить</li>
+</ul>
+<pre>// Регистрация Soup
+SFSmartStore.registerSoup("Contacts", [
+  { path: "Id", type: "string" },
+  { path: "LastName", type: "string" }
+]);
+
+// Smart Query
+const query = SmartStore.buildSmartQuerySpec(
+  "SELECT {Contacts:Name} FROM {Contacts} WHERE {Contacts:AccountId} = '001xxx'", 10
+);</pre>`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как работает SmartSync / MobileSync? Объясни Sync Down и Sync Up.",
+    a: `<strong>SmartSync</strong> — механизм синхронизации между SmartStore (локально) и Salesforce Org (облако).<br><br>
+<strong>Sync Down</strong> — получить данные из Salesforce в SmartStore:
+<ul>
+  <li>SOQL target — произвольный SOQL запрос</li>
+  <li>SOSL target — поиск</li>
+  <li>Metadata target — описания объектов</li>
+  <li>Layout target — page layouts</li>
+</ul>
+<strong>Sync Up</strong> — отправить локальные изменения в Salesforce:
+<ul>
+  <li>Отслеживает записи с флагами <code>__locally_created__</code>, <code>__locally_updated__</code>, <code>__locally_deleted__</code></li>
+  <li>Conflict resolution: Client wins / Server wins / custom merge</li>
+</ul>
+<strong>Re-sync</strong> — периодическая фоновая синхронизация. Важно: SmartSync не real-time, нужен явный триггер.`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как организована OAuth 2.0 аутентификация в Salesforce Mobile SDK?",
+    a: `SDK использует <strong>OAuth 2.0 User Agent Flow</strong> или <strong>Web Server Flow</strong>.<br><br>
+<strong>Флоу:</strong>
+<ol>
+  <li>App открывает Salesforce login URL в embedded WebView / SFSafariViewController</li>
+  <li>User логинится → Salesforce выдаёт authorization code</li>
+  <li>SDK обменивает code на access_token + refresh_token</li>
+  <li>Токены хранятся в Keychain (iOS) / Keystore (Android) — зашифрованно</li>
+  <li>SDK автоматически рефрешит токен при истечении</li>
+</ol>
+<strong>Connected App</strong> в Salesforce Org — нужно создать и настроить OAuth scopes, callback URL.<br><br>
+<div class="warn">⚠️ Важно: callback URL должен совпадать точно. Для мобильных — custom URI scheme (myapp://oauth/callback).</div>`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Что такое Salesforce REST API и как работать с ним из React Native?",
+    a: `<strong>Salesforce REST API</strong> — RESTful интерфейс к данным Salesforce (Contacts, Accounts, Opportunities, custom objects).<br><br>
+<strong>Основные endpoints:</strong>
+<ul>
+  <li><code>GET /services/data/v59.0/sobjects/Contact/</code> — metadata</li>
+  <li><code>GET /services/data/v59.0/query?q=SELECT+Id,Name+FROM+Contact</code> — SOQL</li>
+  <li><code>POST /services/data/v59.0/sobjects/Contact/</code> — create</li>
+  <li><code>PATCH /services/data/v59.0/sobjects/Contact/{id}</code> — update</li>
+</ul>
+<strong>В SDK:</strong> SFRestAPI.sendRequest() — автоматически добавляет Authorization header, рефрешит токен.<br><br>
+<strong>Composite API</strong> — батч нескольких запросов в один HTTP call (важно для offline-first сценариев sync up).`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как работать с Custom Salesforce Objects в мобильном SDK?",
+    a: `Custom objects в Salesforce имеют суффикс <code>__c</code> (Field_Service_Order__c, Asset__r).<br><br>
+<strong>В SmartSync:</strong> работаешь так же как со стандартными объектами, просто указываешь API name.<br><br>
+<pre>const syncOptions = SFSmartSyncTarget.create({
+  type: "soql",
+  query: "SELECT Id, Name, Status__c, Location__c FROM Field_Visit__c WHERE OwnerId = :currentUserId"
+});</pre>
+<strong>Важно знать:</strong>
+<ul>
+  <li>External ID fields — для upsert без Salesforce ID</li>
+  <li>Relationship fields (lookup/master-detail) — __r notation в SOQL</li>
+  <li>API версионирование — locked версия в SDK, не все фичи доступны в старых</li>
+</ul>`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как обеспечить безопасность данных в Salesforce Mobile SDK (шифрование, PIN)?",
+    a: `<strong>SmartStore шифрование:</strong> SQLCipher — AES-256 шифрование всей базы. Ключ генерируется из пользовательского PIN или device credentials.<br><br>
+<strong>Passcode / Biometric:</strong> SDK имеет встроенный Passcode Manager — после N минут неактивности требует PIN/биометрию.<br><br>
+<strong>Keychain/Keystore:</strong> OAuth токены хранятся в защищённом хранилище ОС.<br><br>
+<strong>Certificate Pinning:</strong> SDK поддерживает SSL pinning против MITM атак.<br><br>
+<strong>Remote Wipe:</strong> через MDM или Salesforce Connected App — при logout очищается весь SmartStore.`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Что такое SOQL и чем он отличается от SQL? Приведи примеры для мобильного сценария.",
+    a: `<strong>SOQL (Salesforce Object Query Language)</strong> — диалект SQL для Salesforce.<br><br>
+<strong>Отличия от SQL:</strong>
+<ul>
+  <li>Нет <code>JOIN</code> — вместо этого relationship traversal через точку</li>
+  <li>Нет <code>SELECT *</code> — нужно явно перечислять поля</li>
+  <li>Aggregate functions ограничены (COUNT, MAX, MIN, SUM, AVG)</li>
+  <li>Лимит 50 000 записей за один запрос</li>
+</ul>
+<pre>-- Contacts с их Account и открытыми задачами
+SELECT Id, Name, Phone, Account.Name,
+  (SELECT Subject, ActivityDate FROM Tasks WHERE Status != 'Completed')
+FROM Contact
+WHERE AccountId != null
+ORDER BY LastModifiedDate DESC
+LIMIT 200</pre>
+<strong>Для offline/mobile:</strong> LIMIT критичен — не тянуть всё, только нужное. Date-based delta sync: <code>WHERE LastModifiedDate > :lastSyncDate</code>`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как реализовать delta sync (синхронизацию только изменений) в SmartSync?",
+    a: `<strong>Delta sync</strong> — синхронизировать только записи, изменённые с последней синхронизации.<br><br>
+<strong>Через SmartSync:</strong> используй <code>SFSyncStateSyncType</code> + SOQL target с <code>LastModifiedDate</code>:
+<pre>SELECT Id, Name, Status__c
+FROM Work_Order__c
+WHERE LastModifiedDate > :lastSyncDate
+ORDER BY LastModifiedDate ASC
+LIMIT 2000</pre>
+<strong>Re-sync опция:</strong> SDK хранит timestamp последней синхронизации в Soup — при ре-синке автоматически использует его.<br><br>
+<strong>Conflict handling:</strong> если сервер изменился пока пользователь offline — нужна стратегия разрешения конфликтов (обычно server wins для field-data, client wins для статусов операций).`
+  },
+  {
+    tag: "sf", tagLabel: "Salesforce",
+    q: "Как интегрировать push notifications через Salesforce (Connected App)?",
+    a: `<strong>Salesforce Push Notifications</strong> работают через FCM (Android) и APNs (iOS), но управляются через Salesforce Org.<br><br>
+<strong>Настройка:</strong>
+<ol>
+  <li>Mobile SDK автоматически регистрирует FCM/APNs token в Salesforce</li>
+  <li>В Salesforce — Notification Builder или Apex trigger → PushNotification class</li>
+  <li>Таргетинг по User ID или по кастомным критериям</li>
+</ol>
+<strong>Ограничения:</strong> Salesforce push — не real-time стриминг. Для real-time — Salesforce Streaming API (CometD) или Platform Events через WebSocket.`
+  },
+
+  // ===== REDUX =====
+  {
+    tag: "redux", tagLabel: "Redux",
+    q: "Объясни принципы Redux (три закона). Зачем Redux нужен в enterprise mobile приложении?",
+    a: `<strong>Три принципа:</strong>
+<ul>
+  <li><strong>Single source of truth</strong> — один store для всего состояния</li>
+  <li><strong>State is read-only</strong> — менять только через dispatch(action)</li>
+  <li><strong>Changes via pure functions</strong> — reducers — чистые функции (state, action) => newState</li>
+</ul>
+<strong>Зачем в enterprise:</strong>
+<ul>
+  <li>Предсказуемость — любое изменение отслеживаемо</li>
+  <li>Devtools — time-travel debugging</li>
+  <li>Тестируемость — reducers тестируются как pure functions</li>
+  <li>Сложные data flows — cross-feature dependencies</li>
+</ul>
+<div class="warn">⚠️ Для простых приложений Redux избыточен. Но в enterprise (Salesforce offline sync + UI state + user session) — оправдан.</div>`
+  },
+  {
+    tag: "redux", tagLabel: "Redux",
+    q: "Что такое Redux Toolkit и чем он лучше классического Redux?",
+    a: `<strong>Redux Toolkit (RTK)</strong> — официальный opinionated способ писать Redux.<br><br>
+<strong>Что решает:</strong>
+<ul>
+  <li>Boilerplate — <code>createSlice</code> генерирует action creators + reducer в одном месте</li>
+  <li>Immer встроен — можно "мутировать" state в reducer (под капотом всё иммутабельно)</li>
+  <li><code>configureStore</code> — Redux DevTools, Thunk middleware из коробки</li>
+  <li><code>createAsyncThunk</code> — стандартный паттерн async actions с pending/fulfilled/rejected</li>
+  <li><code>RTK Query</strong> — data fetching + кеширование (как React Query, но в Redux)</li>
+</ul>
+<pre>const syncSlice = createSlice({
+  name: 'sync',
+  initialState: { status: 'idle', lastSyncAt: null },
+  reducers: {
+    syncStarted: (state) => { state.status = 'syncing'; },
+    syncCompleted: (state, action) => {
+      state.status = 'idle';
+      state.lastSyncAt = action.payload;
+    },
+  },
+});</pre>`
+  },
+  {
+    tag: "redux", tagLabel: "Redux",
+    q: "Как организовать Redux для offline-first приложения с Salesforce синхронизацией?",
+    a: `<strong>Структура слайсов:</strong>
+<ul>
+  <li><code>authSlice</code> — OAuth token, user info, session</li>
+  <li><code>syncSlice</code> — sync status, last sync timestamps, conflict queue</li>
+  <li><code>dataSlice</code> (per entity) — contacts, workOrders, assets</li>
+  <li><code>uiSlice</code> — loading states, modals, toasts</li>
+  <li><code>connectivitySlice</code> — isOnline, connection quality</li>
+</ul>
+<strong>Middleware для sync:</strong>
+<pre>// Middleware перехватывает offline-операции
+const offlineMiddleware = store => next => action => {
+  if (!store.getState().connectivity.isOnline && action.meta?.offline) {
+    offlineQueue.enqueue(action);
+    return next({ ...action, type: action.type + '_QUEUED' });
+  }
+  return next(action);
+};</pre>
+<strong>Redux-persist</strong> — персистентность state между сессиями.`
+  },
+  {
+    tag: "redux", tagLabel: "Redux",
+    q: "Что такое Redux Thunk и Redux Saga? Когда использовать каждый?",
+    a: `<strong>Redux Thunk</strong> — middleware позволяет dispatch функций (не только объектов). Функция получает dispatch + getState.<br>
+Когда: простые async flows, conditional dispatching, большинство продуктовых сценариев.<br><br>
+<strong>Redux Saga</strong> — middleware на основе Generator functions. Использует Effects (call, put, take, fork, race, all).<br>
+Когда: сложная оркестрация (retry логика, cancellation, параллельные потоки, event channels).<br><br>
+<strong>Для Salesforce sync:</strong> Saga удобна — можно написать saga, которая слушает connectivity-события, отменяет синхронизации, обрабатывает retry с backoff.
+<pre>function* syncSaga() {
+  while (true) {
+    yield take('SYNC_REQUESTED');
+    try {
+      const result = yield call(salesforceSync);
+      yield put(syncCompleted(result));
+    } catch (e) {
+      yield put(syncFailed(e));
+      yield delay(RETRY_DELAY);
+    }
+  }
+}</pre>`
+  },
+  {
+    tag: "redux", tagLabel: "Redux",
+    q: "Как избежать re-renders при работе с большим Redux store?",
+    a: `<strong>Проблема:</strong> <code>useSelector</code> по умолчанию запускает ре-рендер при любом изменении возвращаемого значения (shallow equality).<br><br>
+<strong>Решения:</strong>
+<ul>
+  <li><strong>Memoized selectors (Reselect)</strong> — <code>createSelector</code> кешируется пока inputs не изменились</li>
+  <li>Гранулярные селекторы — подписываться только на нужный кусок state</li>
+  <li><code>useSelector</code> с custom equality: <code>useSelector(sel, shallowEqual)</code></li>
+  <li><strong>RTK Query</strong> — встроенная нормализация и кеширование данных</li>
+</ul>
+<pre>const selectVisibleContacts = createSelector(
+  [selectAllContacts, selectSearchQuery],
+  (contacts, query) => contacts.filter(c => c.name.includes(query))
+);</pre>`
+  },
+  {
+    tag: "redux", tagLabel: "Redux",
+    q: "Как тестировать Redux reducers и async thunks?",
+    a: `<strong>Reducers</strong> — чистые функции, тестируются просто:
+<pre>it('handles syncCompleted', () => {
+  const state = reducer(initialState, syncCompleted('2024-01-01'));
+  expect(state.status).toBe('idle');
+  expect(state.lastSyncAt).toBe('2024-01-01');
+});</pre>
+<strong>Async Thunks (RTK):</strong>
+<pre>it('fetches contacts', async () => {
+  const store = configureStore({ reducer: { contacts: contactsReducer } });
+  await store.dispatch(fetchContacts());
+  const state = store.getState().contacts;
+  expect(state.status).toBe('succeeded');
+});</pre>
+<strong>Mocking:</strong> jest.mock для API calls, MSW (Mock Service Worker) для интеграционных тестов.`
+  },
+
+  // ===== COMPUTER VISION =====
+  {
+    tag: "cv", tagLabel: "Computer Vision",
+    q: "Как интегрировать OpenCV в React Native приложение?",
+    a: `OpenCV — C++ библиотека, интегрируется через <strong>Native Module</strong>.<br><br>
+<strong>Варианты:</strong>
+<ul>
+  <li><strong>opencv-react-native</strong> — готовая обёртка (но не всегда актуальна)</li>
+  <li>Кастомный Native Module — OpenCV в JNI (Android) / Objective-C++ (iOS)</li>
+  <li>OpenCV.js через WebView — для менее требовательных сценариев</li>
+</ul>
+<strong>Типичная интеграция Android:</strong>
+<pre>// CMakeLists.txt
+find_package(OpenCV REQUIRED)
+target_link_libraries(myapp \${OpenCV_LIBS})
+
+// Java Native Module
+@ReactMethod
+public void detectEdges(String imagePath, Promise promise) {
+  Mat src = Imgcodecs.imread(imagePath);
+  Mat edges = new Mat();
+  Imgproc.Canny(src, edges, 100, 200);
+  // сохранить результат → promise.resolve(outputPath);
+}</pre>
+<div class="tip">💡 Если у тебя не было OpenCV в продакшне — честно скажи, что интегрировал сторонние нативные модули (WebView, Firebase) и знаком с концепцией.</div>`
+  },
+  {
+    tag: "cv", tagLabel: "Computer Vision",
+    q: "Что такое shelf scanning и как его реализовать в мобильном приложении?",
+    a: `<strong>Shelf scanning</strong> — компьютерное зрение для инвентаризации полок (розница, FMCG). Приложение распознаёт SKU (штрихкоды, упаковки) в реальном времени или по фото.<br><br>
+<strong>Подходы:</strong>
+<ul>
+  <li><strong>Barcode/QR scanning</strong> — vision-camera + MLKit/ZXing (простой случай)</li>
+  <li><strong>Object detection</strong> — ML модель (YOLOv5/v8 или Google AutoML Vision) задетектить продукты</li>
+  <li><strong>OCR</strong> — распознать текст с этикеток (Firebase ML, Tesseract)</li>
+  <li><strong>GCP Vision AI</strong> — Cloud API для тяжёлых сценариев (лучшая точность)</li>
+</ul>
+<strong>В React Native:</strong> react-native-vision-camera — доступ к camera frame processor для real-time обработки, интеграция с ML модели через VisionCamera Frame Processor Plugins.`
+  },
+  {
+    tag: "cv", tagLabel: "Computer Vision",
+    q: "Как использовать Google Cloud Vision AI из React Native?",
+    a: `<strong>GCP Vision AI</strong> — облачный API, вызов через HTTPS.<br><br>
+<strong>Возможности:</strong> OCR, Label Detection, Object Detection, Face Detection, Document Understanding, Safe Search.<br><br>
+<pre>const analyzeImage = async (base64Image) => {
+  const response = await fetch(
+    'https://vision.googleapis.com/v1/images:annotate?key=' + API_KEY,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        requests: [{
+          image: { content: base64Image },
+          features: [
+            { type: 'TEXT_DETECTION' },
+            { type: 'LABEL_DETECTION', maxResults: 10 }
+          ]
+        }]
+      })
+    }
+  );
+  return response.json();
+};</pre>
+<strong>Offline-capable альтернатива:</strong> on-device ML через TensorFlow Lite или CoreML (iOS) — меньше точность, но работает без сети.`
+  },
+  {
+    tag: "cv", tagLabel: "Computer Vision",
+    q: "Как оптимизировать обработку изображений в мобильном приложении?",
+    a: `<strong>Основные стратегии:</strong>
+<ul>
+  <li><strong>Resize before upload</strong> — уменьшить до нужного размера перед отправкой (react-native-image-resizer)</li>
+  <li><strong>Compress</strong> — JPEG quality 0.7-0.8 достаточно для большинства CV задач</li>
+  <li><strong>Process on background thread</strong> — нативный модуль, не блокировать JS thread</li>
+  <li><strong>Chunked processing</strong> — для видео/стримов обрабатывать каждый N-й кадр</li>
+  <li><strong>Caching</strong> — кешировать результаты по image hash</li>
+  <li><strong>Edge vs Cloud</strong> — on-device для latency-чувствительного, cloud для точности</li>
+</ul>
+Для shelf scanning в field-force сценарии: пользователь фотографирует → resize → compress → отправить в GCP Vision → результат в UI. Не нужно real-time.`
+  },
+  {
+    tag: "cv", tagLabel: "Computer Vision",
+    q: "Что такое react-native-vision-camera и как с ним работать?",
+    a: `<strong>VisionCamera v3/v4</strong> — современная camera library для React Native с поддержкой Frame Processors.<br><br>
+<strong>Frame Processors</strong> — JS функции (на самом деле Worklets), вызываемые на каждом кадре с камеры, выполняются на отдельном thread:<br>
+<pre>const frameProcessor = useFrameProcessor((frame) => {
+  'worklet';
+  const barcodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE]);
+  runOnJS(setScannedCodes)(barcodes);
+}, []);</pre>
+<strong>Интеграция ML:</strong> Frame Processor Plugins — нативные плагины (MLKit, OpenCV) вызываются прямо из frame processor.<br><br>
+<strong>Ключевые фичи:</strong> HDR, RAW capture, zoom, torch, photo/video, multi-camera.`
+  },
+
+  // ===== PERFORMANCE =====
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Как профилировать React Native приложение? Какие инструменты используешь?",
+    a: `<strong>Инструменты:</strong>
+<ul>
+  <li><strong>Flipper</strong> — UI инспектор, network monitor, React DevTools, Hermes Debugger, Performance</li>
+  <li><strong>React DevTools Profiler</strong> — какие компоненты рендерятся и как часто</li>
+  <li><strong>Systrace (Android)</strong> — нативный трейс, видно JS/UI/Render threads</li>
+  <li><strong>Instruments (iOS)</strong> — Memory, CPU, GPU, Time Profiler</li>
+  <li><strong>Android Profiler</strong> — в Android Studio, memory/CPU/network</li>
+  <li><strong>perf monitor</strong> — встроенный overlay (FPS, JS thread, UI thread)</li>
+</ul>
+<strong>Что ищем:</strong> jank (drops ниже 60fps), memory leaks (растущий heap), excessive re-renders, slow JS operations.`
+  },
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Как избежать memory leaks в React Native?",
+    a: `<strong>Типичные источники:</strong>
+<ul>
+  <li>Незакрытые event listeners (NetInfo, AppState, Keyboard)</li>
+  <li>setTimeout/setInterval без clearTimeout/clearInterval</li>
+  <li>Async operations после unmount компонента</li>
+  <li>Замыкания в Redux subscriptions</li>
+  <li>Нативные listeners без cleanup</li>
+</ul>
+<pre>useEffect(() => {
+  const sub = NetInfo.addEventListener(handleChange);
+  const timer = setInterval(syncData, 30000);
+  
+  return () => {
+    sub(); // cleanup listener
+    clearInterval(timer);
+  };
+}, []);</pre>
+<strong>Паттерн isMounted для async:</strong>
+<pre>useEffect(() => {
+  let cancelled = false;
+  fetchData().then(data => {
+    if (!cancelled) setData(data);
+  });
+  return () => { cancelled = true; };
+}, []);</pre>`
+  },
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Как оптимизировать battery usage в React Native приложении?",
+    a: `<strong>Основные источники разряда:</strong>
+<ul>
+  <li>GPS/Location polling — использовать только нужную точность, останавливать когда не нужно</li>
+  <li>Background sync — редкие интервалы, использовать BackgroundFetch</li>
+  <li>Network requests — батчить, кешировать, exponential backoff</li>
+  <li>Animations — избегать тяжёлых теней, blur, постоянных анимаций</li>
+  <li>Camera — освобождать ресурсы когда не используется</li>
+</ul>
+<strong>Инструменты:</strong> Android Battery Historian, iOS Energy Gauge в Instruments.<br><br>
+<strong>Для field-force приложений (как этот проект):</strong> пользователи весь день на улице — battery критичен. Sync only on WiFi option, reduce location accuracy когда приложение в background.`
+  },
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Что такое InteractionManager в React Native и когда его использовать?",
+    a: `<code>InteractionManager.runAfterInteractions()</code> — запускает тяжёлую работу после завершения анимаций/transitions.<br><br>
+<strong>Проблема без него:</strong> тяжёлые вычисления во время навигационного transition → jank, дёрганные анимации.<br><br>
+<pre>// Переход на экран завершён → тогда грузим данные
+useEffect(() => {
+  const task = InteractionManager.runAfterInteractions(() => {
+    loadHeavyData();
+    initializeMap();
+  });
+  return () => task.cancel();
+}, []);</pre>
+<strong>Когда нужен:</strong> загрузка данных при navigation, инициализация тяжёлых SDK (карты, OpenCV), первоначальный рендер экрана.`
+  },
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Как оптимизировать images в React Native? Что такое FastImage?",
+    a: `<strong>Проблемы стандартного Image:</strong> нет HTTP кеширования, медленная загрузка, нет прогрессивного отображения.<br><br>
+<strong>react-native-fast-image:</strong>
+<ul>
+  <li>SDWebImage (iOS) / Glide (Android) под капотом</li>
+  <li>Агрессивное кеширование (disk + memory)</li>
+  <li>Приоритеты загрузки (high/normal/low)</li>
+  <li>Preloading</li>
+  <li>resizeMode с нативной оптимизацией</li>
+</ul>
+<pre>&lt;FastImage
+  source={{ uri: url, priority: FastImage.priority.high,
+            cache: FastImage.cacheControl.immutable }}
+  resizeMode={FastImage.resizeMode.cover}
+/&gt;</pre>
+<strong>Дополнительно:</strong> WebP формат (меньше размер при той же качестве), Progressive JPEG, lazy loading для off-screen images.`
+  },
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Объясни JS thread vs UI thread vs Native Modules thread в React Native.",
+    a: `<strong>Три основных потока:</strong><br><br>
+<strong>JS Thread</strong> — выполняет весь React/JS код: компонентный lifecycle, Redux reducers, бизнес-логика. Один для всего приложения — если занят, всё тормозит.<br><br>
+<strong>UI Thread (Main Thread)</strong> — нативные UI операции, жесты, анимации. Должен быть свободен для 60fps.<br><br>
+<strong>Shadow Thread</strong> — layout вычисления (Yoga engine).<br><br>
+<strong>Правило:</strong> не блокировать UI thread. Тяжёлые вычисления → JS thread или нативные модули (свой thread).<br><br>
+<strong>С Reanimated 2:</strong> анимации переносятся с JS на UI thread → 60fps гарантировано.<br>
+<strong>С New Architecture / JSI:</strong> синхронный доступ к нативному коду, меньше bottleneck.`
+  },
+  {
+    tag: "perf", tagLabel: "Performance",
+    q: "Как измерять и улучшать App Launch Time (Time To Interactive) в React Native?",
+    a: `<strong>Составляющие launch time:</strong>
+<ul>
+  <li>Native init (app binary загрузка)</li>
+  <li>JS engine init (Hermes startup)</li>
+  <li>Bundle load + parse</li>
+  <li>React render (первый экран)</li>
+  <li>Data fetch</li>
+</ul>
+<strong>Оптимизации:</strong>
+<ul>
+  <li><strong>Hermes</strong> — bytecode, не парсится при старте</li>
+  <li><strong>RAM Bundles</strong> (legacy) или <strong>Code Splitting</strong> — грузить только нужный код</li>
+  <li><strong>Lazy screen loading</strong> — React.lazy + Suspense</li>
+  <li><strong>Preload критичные данные</strong> в splash screen период</li>
+  <li><strong>Inline Requires</strong> — metro transformer, модули импортируются при использовании</li>
+</ul>
+<strong>Измерение:</strong> Android Profiler startup time, iOS Instruments, custom performance marks.`
+  },
+
+  // ===== GIT / CI =====
+  {
+    tag: "git", tagLabel: "Git/CI",
+    q: "Опиши Git branching strategy для мобильного приложения в enterprise окружении.",
+    a: `<strong>GitFlow адаптированный для mobile:</strong>
+<ul>
+  <li><code>main</code> — production (тегированные релизы)</li>
+  <li><code>develop</code> — интеграционная ветка</li>
+  <li><code>feature/JIRA-123-feature-name</code> — фича-ветки от develop</li>
+  <li><code>release/v1.2.0</code> — release candidate, только bugfixes</li>
+  <li><code>hotfix/v1.1.1</code> — критические фиксы напрямую в main</li>
+</ul>
+<strong>PR rules:</strong> min 1-2 reviewer approvals, CI pass required, no direct push to main/develop.<br><br>
+<strong>Особенность mobile:</strong> release ветки живут дольше — App Store review занимает 1-3 дня. Нельзя fast-forward как в web.`
+  },
+  {
+    tag: "git", tagLabel: "Git/CI",
+    q: "Как настроить CI/CD pipeline для React Native (iOS + Android)?",
+    a: `<strong>Типичный stack:</strong> GitHub Actions / Bitrise / CircleCI + Fastlane<br><br>
+<strong>Stages в pipeline:</strong>
+<ol>
+  <li><strong>Lint & Type Check</strong> — ESLint, TypeScript</li>
+  <li><strong>Unit Tests</strong> — Jest</li>
+  <li><strong>Build Android</strong> — ./gradlew assembleRelease (или bundleRelease для AAB)</li>
+  <li><strong>Build iOS</strong> — xcodebuild / Fastlane gym</li>
+  <li><strong>Sign</strong> — Android keystore, iOS certificates + provisioning</li>
+  <li><strong>Distribute</strong> — Firebase App Distribution / TestFlight / Play Internal Testing</li>
+</ol>
+<strong>Fastlane lanes:</strong>
+<pre>lane :beta do
+  increment_build_number
+  build_app(scheme: "MyApp")
+  upload_to_testflight
+end</pre>
+<strong>Secrets:</strong> keystore, certificates — через GitHub Secrets / environment variables, никогда в репо.`
+  },
+  {
+    tag: "git", tagLabel: "Git/CI",
+    q: "Как организовать code review процесс для мобильного проекта?",
+    a: `<strong>PR структура:</strong>
+<ul>
+  <li>Описание: что изменено, зачем, как тестировать</li>
+  <li>Скриншоты/видео для UI изменений</li>
+  <li>Ссылка на JIRA тикет</li>
+  <li>Checklist: тесты написаны, лок файлы обновлены, no console.log</li>
+</ul>
+<strong>Review checklist (senior perspective):</strong>
+<ul>
+  <li>Correctness: logic bugs, edge cases</li>
+  <li>Performance: unnecessary re-renders, memory leaks</li>
+  <li>Security: hardcoded secrets, unsafe data handling</li>
+  <li>Naming & readability</li>
+  <li>Test coverage</li>
+  <li>Platform-specific behaviour (iOS vs Android)</li>
+</ul>
+<div class="tip">💡 Как ментор — оставляй конструктивные комментарии с объяснением "почему", не только "что не так".</div>`
+  },
+  {
+    tag: "git", tagLabel: "Git/CI",
+    q: "Что такое Conventional Commits и зачем они нужны в mobile проекте?",
+    a: `<strong>Conventional Commits</strong> — стандарт сообщений коммитов:<br>
+<code>type(scope): description</code><br><br>
+<strong>Types:</strong> feat, fix, chore, refactor, perf, test, docs, ci, build<br><br>
+<pre>feat(sync): add delta sync for SmartStore contacts
+fix(android): resolve crash on Samsung devices with null savedInstanceState
+perf(list): replace FlatList with FlashList for contacts screen</pre>
+<strong>Преимущества:</strong>
+<ul>
+  <li>Автогенерация CHANGELOG</li>
+  <li>Автоматическое semantic versioning (commitlint + semantic-release)</li>
+  <li>Легко читать историю и находить регрессии</li>
+  <li>Стандарт для команды</li>
+</ul>`
+  },
+  {
+    tag: "git", tagLabel: "Git/CI",
+    q: "Как работает CodePush / EAS Update и когда его можно использовать?",
+    a: `<strong>CodePush (Microsoft) / EAS Update (Expo)</strong> — OTA (Over-The-Air) обновления JavaScript bundle без публикации в Store.<br><br>
+<strong>Как работает:</strong>
+<ol>
+  <li>Публикуешь новый JS bundle на сервер</li>
+  <li>Приложение при старте проверяет наличие обновления</li>
+  <li>Скачивает diff, применяет при следующем перезапуске</li>
+</ol>
+<strong>Ограничения (важно!):</strong>
+<ul>
+  <li>Только JS/assets — нативный код (native modules, gradle, podfile) требует полного релиза</li>
+  <li>App Store запрещает использовать OTA для существенного изменения функциональности</li>
+  <li>Не для hotfix нативных крашей</li>
+</ul>
+<strong>Хорошо для:</strong> bugfix в JS логике, текстовые/UI изменения, A/B testing.`
+  },
+
+  // ===== ARCHITECTURE =====
+  {
+    tag: "arch", tagLabel: "Architecture",
+    q: "Как ты организуешь структуру папок в большом React Native проекте?",
+    a: `<strong>Feature-based структура (рекомендую для enterprise):</strong>
+<pre>src/
+├── app/            # store, navigation root, providers
+├── features/
+│   ├── contacts/
+│   │   ├── api/       # API calls
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── screens/
+│   │   ├── store/     # slice, selectors, thunks
+│   │   └── types.ts
+│   ├── sync/
+│   └── auth/
+├── shared/
+│   ├── components/  # Button, Input, Modal
+│   ├── hooks/       # useNetInfo, useDebounce
+│   ├── utils/
+│   └── types/
+└── services/
+    ├── salesforce/  # SmartStore, SmartSync wrappers
+    └── api/</pre>
+<strong>Принципы:</strong> всё, что относится к фиче — внутри фичи. Shared только реально переиспользуемое.`
+  },
+  {
+    tag: "arch", tagLabel: "Architecture",
+    q: "Как организовать TypeScript типизацию в React Native проекте с Salesforce данными?",
+    a: `<strong>Уровни типов:</strong>
+<ul>
+  <li><strong>Salesforce API types</strong> — типы Salesforce объектов (Contact, Account, WorkOrder__c)</li>
+  <li><strong>SmartStore types</strong> — добавляются служебные поля (<code>_soupEntryId</code>, <code>__locally_updated__</code>)</li>
+  <li><strong>Domain types</strong> — бизнес-объекты приложения (без Salesforce служебных полей)</li>
+  <li><strong>UI types</strong> — props, navigation params</li>
+</ul>
+<pre>// Salesforce API response
+interface SFContact {
+  Id: string;
+  Name: string;
+  Phone?: string;
+  Account?: { Name: string };
+}
+
+// SmartStore entry
+interface LocalContact extends SFContact {
+  _soupEntryId: number;
+  __locally_updated__: boolean;
+  __locally_deleted__: boolean;
+}
+
+// Domain model (для UI)
+interface Contact {
+  id: string;
+  name: string;
+  phone: string | null;
+  accountName: string | null;
+  isModifiedLocally: boolean;
+}</pre>
+Mapper functions между слоями.`
+  },
+  {
+    tag: "arch", tagLabel: "Architecture",
+    q: "Как работать с React Native в Monorepo (Turborepo, Nx)?",
+    a: `<strong>Turborepo</strong> — популярный выбор для RN + Next.js монорепо (как у тебя в Dishday).<br><br>
+<strong>Структура:</strong>
+<pre>apps/
+├── mobile/   # React Native / Expo
+├── web/      # Next.js
+packages/
+├── ui/       # shared компоненты
+├── types/    # общие TypeScript типы
+├── config/   # ESLint, TypeScript configs
+└── utils/    # shared бизнес-логика</pre>
+<strong>Metro настройка для monorepo:</strong>
+<pre>const config = {
+  watchFolders: [path.resolve(__dirname, '../../packages')],
+  resolver: {
+    nodeModulesPaths: [path.resolve(__dirname, '../../node_modules')]
+  }
+};</pre>
+<strong>Важно:</strong> Expo SDK упрощает настройку (Expo + workspaces = меньше головной боли).`
+  },
+  {
+    tag: "arch", tagLabel: "Architecture",
+    q: "Как обеспечить error handling и crash reporting в React Native приложении?",
+    a: `<strong>Crash Reporting:</strong> Sentry / Firebase Crashlytics — обязательно в продакшне.<br><br>
+<strong>Error Boundary:</strong> для React render errors:
+<pre>class ErrorBoundary extends React.Component {
+  componentDidCatch(error, info) {
+    Sentry.captureException(error, { extra: info });
+  }
+  render() {
+    if (this.state.hasError) return &lt;FallbackUI /&gt;;
+    return this.props.children;
+  }
+}</pre>
+<strong>Global JS errors:</strong>
+<pre>ErrorUtils.setGlobalHandler((error, isFatal) => {
+  Sentry.captureException(error);
+  if (isFatal) showFatalErrorUI();
+});</pre>
+<strong>Network errors:</strong> типизированные API errors, retry logic, user-friendly messages.<br>
+<strong>Offline errors:</strong> graceful degradation, не крашиться — показывать cached данные.`
+  },
+  {
+    tag: "arch", tagLabel: "Architecture",
+    q: "Что такое Micro-frontend в контексте React Native? Как масштабировать большую команду?",
+    a: `В React Native нет iframe как в web, поэтому "micro-frontend" реализуется иначе:<br><br>
+<strong>Подходы для масштабирования:</strong>
+<ul>
+  <li><strong>Module Federation</strong> (Re.Pack) — динамическая загрузка feature bundles в runtime</li>
+  <li><strong>Monorepo + packages</strong> — каждая команда владеет своим пакетом, интеграция через registry</li>
+  <li><strong>Feature flags</strong> — разные команды деплоят независимо, активация через флаги</li>
+</ul>
+<strong>Организационно:</strong> domain-driven teams (каждая команда = фича/домен), shared platform team для core infrastructure (navigation, networking, design system).<br><br>
+<div class="tip">💡 На senior-уровне важно знать эти концепции, даже если не реализовывал — покажи понимание trade-offs.</div>`
+  },
+
+  // ===== LEADERSHIP =====
+  {
+    tag: "lead", tagLabel: "Leadership",
+    q: "Как ты ведёшь менторство junior разработчиков? Приведи конкретный пример.",
+    a: `<strong>Подход:</strong>
+<ul>
+  <li>Начинаю с оценки текущего уровня — что человек уже знает, что интересно</li>
+  <li>Даю задачи чуть выше текущего уровня (zone of proximal development)</li>
+  <li>Code review с объяснением "почему", не только "что не так"</li>
+  <li>Парное программирование для сложных задач</li>
+  <li>Учу задавать правильные вопросы, а не давать все ответы</li>
+</ul>
+<strong>Конкретно:</strong> при ревью пишу не "переделай", а "посмотри на это с точки зрения производительности — как часто этот компонент будет ре-рендериться? Попробуй useMemo/useCallback".<br><br>
+<div class="tip">💡 Подготовь 1-2 реальных истории из Blackbit — как помогал коллегам разобраться с конкретной проблемой.</div>`
+  },
+  {
+    tag: "lead", tagLabel: "Leadership",
+    q: "Как ты проводишь технический дизайн (technical design) для нового модуля?",
+    a: `<strong>Процесс:</strong>
+<ol>
+  <li><strong>Understand requirements</strong> — бизнес-требования, non-functional (производительность, offline, security)</li>
+  <li><strong>Research</strong> — существующие решения, ограничения платформы (Salesforce SDK особенности)</li>
+  <li><strong>Draft architecture</strong> — data flow, компонентная структура, API contracts</li>
+  <li><strong>Review с командой</strong> — собрать feedback, найти edge cases</li>
+  <li><strong>ADR (Architecture Decision Record)</strong> — зафиксировать решение и альтернативы</li>
+  <li><strong>Breakdown</strong> — разбить на задачи, оценить</li>
+</ol>
+<strong>Артефакты:</strong> sequence diagram для сложных flows, ER diagram для данных, interface/type definitions как "контракт" между командами.`
+  },
+  {
+    tag: "lead", tagLabel: "Leadership",
+    q: "Как ты работаешь с техническим долгом в продуктовом проекте?",
+    a: `<strong>Подход:</strong>
+<ul>
+  <li>Не игнорировать, но и не останавливать разработку ради рефакторинга</li>
+  <li>Ведение tech debt backlog с категоризацией (критичный, влияет на скорость, косметический)</li>
+  <li>"Бой с попутным ветром" — рефакторинг при работе рядом с кодом</li>
+  <li>Выделение 20% capacity спринта на tech debt (договариваться с PM)</li>
+  <li>Документирование debt — почему возник, какие риски несёт</li>
+</ul>
+<strong>Конкретно в RN контексте:</strong> устаревшие библиотеки (security риски), deprecated APIs (Old Architecture → New Architecture migration), отсутствие типизации → TypeScript постепенно.`
+  },
+  {
+    tag: "lead", tagLabel: "Leadership",
+    q: "Как ты оцениваешь задачи (estimation) в мобильной разработке?",
+    a: `<strong>Подход:</strong>
+<ul>
+  <li>Декомпозиция на subtasks — каждая не больше 1-2 дней</li>
+  <li>Учитываю: iOS + Android (часто разная сложность), тестирование, code review время</li>
+  <li>Буфер для неизвестного (unknowns) — для новых API/SDK (+30-50%)</li>
+  <li>T-shirt sizing для high-level, story points или hours для спринта</li>
+</ul>
+<strong>Red flags в mobile estimation:</strong>
+<ul>
+  <li>Нативные интеграции — всегда дольше чем кажется</li>
+  <li>Первая работа с незнакомым SDK (Salesforce Mobile SDK) — умножай на 2</li>
+  <li>iOS + Android = не умножай на 2, но на 1.4-1.6 как минимум</li>
+</ul>
+<div class="tip">💡 Честная оценка > оптимистичная. Объясняй why, а не просто цифру.</div>`
+  },
+  {
+    tag: "lead", tagLabel: "Leadership",
+    q: "Как ты объясняешь технические решения нетехническому stakeholder?",
+    a: `<strong>Принципы:</strong>
+<ul>
+  <li>Говори на языке бизнеса — не "мы используем SmartStore", а "пользователь сможет работать без интернета и данные не потеряются"</li>
+  <li>Аналогии из реальной жизни</li>
+  <li>Impact first — "это решит проблему X, которая стоила Y"</li>
+  <li>Trade-offs честно — "это займёт 2 недели больше, но даст надёжность"</li>
+</ul>
+<strong>Пример для offline-first:</strong> "Представь, что полевой менеджер едет в зону без сети. Без offline — приложение не работает, потеря дня работы. С offline — всё работает локально, синхронизируется когда появится сеть. Стоимость: 2 спринта на разработку."<br><br>
+Визуализация помогает — простая диаграмма лучше 100 слов.`
+  },
+];
+
+// Render
+const list = document.getElementById('list');
+const qcount = document.getElementById('qcount');
+let activeTag = 'all';
+let searchQ = '';
+
+function render() {
+  const filtered = QUESTIONS.filter(q => {
+    const tagMatch = activeTag === 'all' || q.tag === activeTag;
+    const searchMatch = !searchQ || q.q.toLowerCase().includes(searchQ) || q.a.toLowerCase().includes(searchQ);
+    return tagMatch && searchMatch;
+  });
+  qcount.textContent = `Показано вопросов: ${filtered.length}`;
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty">Ничего не найдено</div>';
+    return;
+  }
+  list.innerHTML = filtered.map((q, i) => `
+    <div class="card" data-idx="${QUESTIONS.indexOf(q)}">
+      <div class="card-header">
+        <span class="q-num">${i + 1}.</span>
+        <span class="q-text">${q.q}</span>
+        <span class="tag tag-${q.tag}">${q.tagLabel}</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">${q.a}</div>
+    </div>
+  `).join('');
+  list.querySelectorAll('.card-header').forEach(h => {
+    h.addEventListener('click', () => {
+      h.closest('.card').classList.toggle('open');
+    });
+  });
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTag = btn.dataset.tag;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  searchQ = e.target.value.toLowerCase();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
